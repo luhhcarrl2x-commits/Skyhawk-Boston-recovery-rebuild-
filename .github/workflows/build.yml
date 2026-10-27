@@ -67,6 +67,25 @@ jobs:
             squashfs-tools unzip xz-utils zip zlib1g-dev \
             python3 python-is-python3 openjdk-17-jdk
 
+      
+      - name: Install Python 2.7 for legacy recovery tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y build-essential curl \
+            libbz2-dev libffi-dev libgdbm-dev liblzma-dev \
+            libreadline-dev libsqlite3-dev tk-dev uuid-dev zlib1g-dev
+          cd /tmp
+          curl -fsSLO https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+          tar -xzf Python-2.7.18.tgz
+          cd Python-2.7.18
+          ./configure --prefix=/opt/python2.7 --with-ensurepip=no
+          make -j2
+          sudo make install
+          sudo ln -sf /opt/python2.7/bin/python2.7 /usr/local/bin/python2.7
+          python2.7 --version
+
       - name: Install Repo tool
         shell: bash
         run: |
